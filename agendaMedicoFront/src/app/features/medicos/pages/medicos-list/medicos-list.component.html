@@ -1,0 +1,196 @@
+<div class="page-header">
+  <div>
+    <h2>Médicos</h2>
+    <p>Gestiona el catálogo de médicos del sistema.</p>
+  </div>
+
+  <button pButton type="button" label="Nuevo médico" icon="pi pi-plus" class="p-button-primary"
+    (click)="abrirNuevoMedico()">
+  </button>
+</div>
+
+<div class="table-card">
+  <div class="table-toolbar">
+    <span class="p-input-icon-left search-box">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar médico..." [(ngModel)]="filtroNombre"
+        (input)="aplicarFiltro()" />
+    </span>
+  </div>
+
+  <p-table [value]="medicosFiltrados" [paginator]="true" [rows]="5" [loading]="cargando" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Especialidad</th>
+        <th>Estatus</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-medico>
+      <tr>
+        <td>{{ medico.nombre }}</td>
+        <td>{{ medico.especialidad }}</td>
+        <td>
+          <span class="status-badge active">Activo</span>
+        </td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+            (click)="editarMedico(medico)">
+          </button>
+          <button pButton icon="pi pi-calendar" class="p-button-rounded p-button-text p-button-success"
+            (click)="abrirCitasMedico(medico)">
+          </button>
+          <button pButton icon="pi pi-clock" class="p-button-rounded p-button-text p-button-warning"
+            (click)="abrirHorarios(medico)">
+          </button>
+
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+            (click)="eliminarMedico(medico.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [header]="modoEdicion ? 'Editar médico' : 'Nuevo médico'" [(visible)]="visibleNuevoMedico" [modal]="true"
+  [closable]="true" [draggable]="false" [resizable]="false" [style]="{ width: '32rem' }" appendTo="body"
+  (onHide)="cerrarDialog()">
+
+  <form [formGroup]="medicoForm" class="medico-form">
+    <div class="field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" pInputText formControlName="nombre" placeholder="Ej. Dr. Juan Pérez" />
+
+      <small class="error" *ngIf="campoInvalido('nombre')">
+        El nombre es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="fk_IdEspecialidad">Especialidad</label>
+      <select id="fk_IdEspecialidad" formControlName="fk_IdEspecialidad">
+        <option [ngValue]="null">Seleccione una especialidad</option>
+        <option *ngFor="let item of especialidades" [ngValue]="item.id">
+          {{ item.nombreEspecialidad }}
+        </option>
+      </select>
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="cerrarDialog()">
+      </button>
+
+      <button pButton type="button" [label]="modoEdicion ? 'Actualizar' : 'Guardar'" icon="pi pi-check"
+        (click)="guardarMedico()">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+<p-dialog [header]="'Horarios de ' + (medicoSeleccionado?.nombre || '')" [(visible)]="horariosDialogVisible"
+  [modal]="true" [closable]="true" [draggable]="false" [resizable]="false" [style]="{ width: '55rem' }" appendTo="body"
+  (onHide)="cerrarDialogHorarios()">
+
+  <div class="horarios-container">
+    <form [formGroup]="horarioForm" class="horario-form">
+      <div class="field">
+        <label>Día</label>
+        <select formControlName="diaSemana">
+          <option value="">Seleccione un día</option>
+          <option *ngFor="let dia of diasSemana" [value]="dia.id">
+            {{ dia.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Hora inicio</label>
+        <input type="time" formControlName="horaInicio" />
+      </div>
+
+      <div class="field">
+        <label>Hora fin</label>
+        <input type="time" formControlName="horaFin" />
+      </div>
+      <small class="error"
+        *ngIf="horarioForm.errors?.['rangoHorarioInvalido'] && (horarioForm.get('horaInicio')?.touched || horarioForm.get('horaFin')?.touched)">
+        La hora fin debe ser mayor que la hora inicio.
+      </small>
+      <div class="field action-field">
+        <button pButton type="button" [label]="modoEdicionHorario ? 'Actualizar horario' : 'Agregar horario'"
+          icon="pi pi-check" (click)="guardarHorario()">
+        </button>
+      </div>
+    </form>
+
+    <p-table [value]="horariosMedico" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Día</th>
+          <th>Hora inicio</th>
+          <th>Hora fin</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-horario>
+        <tr>
+          <td>{{ obtenerNombreDia(horario.diaSemana) }}</td>
+          <td>{{ horario.horaInicio }}</td>
+          <td>{{ horario.horaFin }}</td>
+          <td>
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+              (click)="editarHorario(horario)">
+            </button>
+
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+              (click)="eliminarHorario(horario.id)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+<p-dialog [header]="'Citas de ' + (medicoSeleccionado?.nombre || '')" [(visible)]="citasMedicoDialogVisible"
+  [modal]="true" [closable]="true" [draggable]="false" [resizable]="false" [style]="{ width: '65rem' }" appendTo="body"
+  (onHide)="cerrarDialogCitasMedico()">
+
+  <div class="agenda-medico-container">
+    <div class="agenda-filtros">
+      <div class="field">
+        <label>Fecha</label>
+        <input type="date" [(ngModel)]="fechaAgendaMedico" (change)="obtenerCitasMedico()" />
+      </div>
+    </div>
+
+    <p-table [value]="citasMedico" [loading]="cargandoCitasMedico" responsiveLayout="scroll">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Paciente</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-cita>
+        <tr>
+          <td>{{ cita.paciente }}</td>
+          <td>{{ cita.fechaHoraInicio | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ cita.fechaHoraFin | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ cita.motivo }}</td>
+          <td>{{ cita.estado }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No hay citas para esta fecha.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>

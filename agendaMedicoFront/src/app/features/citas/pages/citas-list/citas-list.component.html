@@ -1,0 +1,137 @@
+<div class="page-header">
+  <div>
+    <h2>Citas</h2>
+    <p>Agenda, consulta y cancela citas médicas.</p>
+  </div>
+</div>
+
+<div class="grid-citas">
+  <div class="card-block">
+    <h3>Agendar cita</h3>
+
+    <form [formGroup]="citaForm" class="cita-form">
+      <div class="field">
+        <label>Médico</label>
+        <select formControlName="medicoId">
+          <option [ngValue]="null">Seleccione un médico</option>
+          <option *ngFor="let medico of medicos" [ngValue]="medico.id">
+            {{ medico.nombre }} - {{ medico.especialidad }}
+          </option>
+        </select>
+        <small class="error" *ngIf="campoInvalido(citaForm, 'medicoId')">
+          El médico es obligatorio.
+        </small>
+      </div>
+
+      <div class="field">
+        <label>Paciente</label>
+        <select formControlName="pacienteId">
+          <option [ngValue]="null">Seleccione un paciente</option>
+          <option *ngFor="let paciente of pacientes" [ngValue]="paciente.id">
+            {{ paciente.nombre }}
+          </option>
+        </select>
+        <small class="error" *ngIf="campoInvalido(citaForm, 'pacienteId')">
+          El paciente es obligatorio.
+        </small>
+      </div>
+
+      <div class="field">
+        <label>Fecha</label>
+        <input type="date" formControlName="fecha" />
+        <small class="error" *ngIf="campoInvalido(citaForm, 'fecha')">
+          La fecha es obligatoria.
+        </small>
+      </div>
+
+      <div class="field">
+        <label>Hora</label>
+        <input type="time" formControlName="hora" />
+        <small class="error" *ngIf="campoInvalido(citaForm, 'hora')">
+          La hora es obligatoria.
+        </small>
+      </div>
+
+      <div class="field full-width">
+        <label>Motivo</label>
+        <textarea rows="3" formControlName="motivo"></textarea>
+        <small class="error" *ngIf="campoInvalido(citaForm, 'motivo')">
+          El motivo es obligatorio.
+        </small>
+      </div>
+
+      <div class="actions">
+        <button pButton type="button" label="Agendar cita" icon="pi pi-check" (click)="agendarCita()">
+        </button>
+      </div>
+    </form>
+
+    <div class="resultado-box" *ngIf="mensajeResultado">
+      <strong>Resultado:</strong>
+      <p>{{ mensajeResultado }}</p>
+
+
+      <div *ngIf="sugerencias.length > 0">
+        <strong>Horarios sugeridos:</strong>
+        <ul>
+          <li *ngFor="let item of sugerencias">{{ item | date:'yyyy-MM-dd HH:mm' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-block">
+    <h3>Consultar cita</h3>
+
+    <form [formGroup]="buscarForm" class="buscar-form">
+      <div class="field">
+        <label>ID de cita</label>
+        <input type="number" formControlName="citaId" />
+      </div>
+
+      <div class="actions">
+        <button pButton type="button" label="Buscar" icon="pi pi-search" (click)="buscarCita()">
+        </button>
+      </div>
+    </form>
+
+    <div class="detalle-cita" *ngIf="citaConsultada">
+      <h4>Detalle de la cita</h4>
+      <p><strong>ID:</strong> {{ citaConsultada.id }}</p>
+      <p><strong>Médico:</strong> {{ citaConsultada.medico }}</p>
+      <p><strong>Paciente:</strong> {{ citaConsultada.paciente }}</p>
+      <p><strong>Inicio:</strong> {{ citaConsultada.fechaHoraInicio | date:'yyyy-MM-dd HH:mm' }}</p>
+      <p><strong>Fin:</strong> {{ citaConsultada.fechaHoraFin | date:'yyyy-MM-dd HH:mm' }}</p>
+      <p><strong>Motivo:</strong> {{ citaConsultada.motivo }}</p>
+      <p><strong>Estado:</strong> {{ citaConsultada.estado }}</p>
+
+      <button *ngIf="citaConsultada.estado === 'Agendada'" pButton type="button" label="Cancelar cita"
+        icon="pi pi-times" class="p-button-danger" (click)="abrirCancelarDialog()">
+      </button>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Cancelar cita" [(visible)]="visibleCancelarDialog" [modal]="true" [closable]="true"
+  [draggable]="false" [resizable]="false" [style]="{ width: '30rem' }" appendTo="body"
+  (onHide)="cerrarCancelarDialog()">
+
+  <form [formGroup]="cancelarForm" class="cancelar-form">
+    <div class="field">
+      <label>Motivo de cancelación</label>
+      <textarea rows="4" formControlName="motivoCancelacion"></textarea>
+      <small class="error" *ngIf="campoInvalido(cancelarForm, 'motivoCancelacion')">
+        El motivo de cancelación es obligatorio.
+      </small>
+    </div>
+
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cerrar" class="p-button-text" (click)="cerrarCancelarDialog()">
+      </button>
+
+      <button pButton type="button" label="Confirmar cancelación" icon="pi pi-times" class="p-button-danger"
+        (click)="cancelarCita()">
+      </button>
+    </div>
+  </form>
+</p-dialog>

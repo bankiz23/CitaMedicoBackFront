@@ -1,0 +1,33 @@
+<div class="stats-grid">
+  <div class="stat-card doctors clickable-card" (click)="irA('/medicos')">
+    <div>
+      <span class="label">Médicos</span>
+      <h3>{{ resumen.totalMedicos }}</h3>
+    </div>
+    <i class="pi pi-user-md"></i>
+  </div>
+
+  <div class="stat-card patients  clickable-card" (click)="irA('/pacientes')">
+    <div>
+      <span class="label">Pacientes</span>
+      <h3>{{ resumen.totalPacientes }}</h3>
+    </div>
+    <i class="pi pi-users"></i>
+  </div>
+
+  <div class="stat-card appointments clickable-card" (click)="irA('/citas')">
+    <div>
+      <span class="label">Citas hoy</span>
+      <h3>{{ resumen.totalCitasHoy }}</h3>
+    </div>
+    <i class="pi pi-calendar-plus"></i>
+  </div>
+
+  <div class="stat-card pending clickable-card" (click)="irA('/citas')">
+    <div>
+      <span class="label">Canceladas</span>
+      <h3>{{ resumen.totalCitasCanceladas }}</h3>
+    </div>
+    <i class="pi pi-times-circle"></i>
+  </div>
+</div>

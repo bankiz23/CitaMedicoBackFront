@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="API.AgendaCitas/API.AgendaCitas.csproj" />
+  <Project Path="API.Models/API.Models.csproj" />
+  <Project Path="API.Services/API.Services.csproj" />
+  <Project Path="API.Tests/API.Tests.csproj" />
+</Solution>
+ 

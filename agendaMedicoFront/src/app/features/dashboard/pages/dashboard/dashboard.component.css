@@ -1,0 +1,94 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #ffffff, #eef6ff);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome-card h2 {
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.welcome-icon {
+  font-size: 3rem;
+  color: var(--primary);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 18px;
+  padding: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+}
+
+.stat-card .label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.stat-card h3 {
+  margin: 0.4rem 0 0;
+  font-size: 2rem;
+}
+
+.stat-card i {
+  font-size: 2rem;
+  padding: 1rem;
+  border-radius: 14px;
+}
+
+.doctors i {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.patients i {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.appointments i {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.pending i {
+  background: #fee2e2;
+  color: #dc2626;
+}
+div {
+  color: black;
+}
+.clickable-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.10);
+}

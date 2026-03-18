@@ -1,0 +1,105 @@
+<div class="page-header">
+  <div>
+    <h2>Pacientes</h2>
+    <p>Gestiona el catálogo de pacientes del sistema.</p>
+  </div>
+
+  <button pButton type="button" label="Nuevo paciente" icon="pi pi-plus" class="p-button-primary"
+    (click)="abrirNuevoPaciente()">
+  </button>
+</div>
+
+<div class="table-card">
+  <div class="table-toolbar">
+    <span class="p-input-icon-left search-box">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar paciente..." [(ngModel)]="filtroTexto"
+        (input)="aplicarFiltro()" />
+    </span>
+  </div>
+
+  <p-table [value]="pacientesFiltrados" [paginator]="true" [rows]="5" [loading]="cargando" responsiveLayout="scroll">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Fecha nacimiento</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Estatus</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-paciente>
+      <tr>
+        <td>{{ paciente.nombre }}</td>
+        <td>{{ paciente.fechaNacimiento | date:'yyyy-MM-dd' }}</td>
+        <td>{{ paciente.telefono }}</td>
+        <td>{{ paciente.correoElectronico }}</td>
+        <td>
+          <span class="status-badge active">
+            {{ paciente.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info"
+            (click)="editarPaciente(paciente)">
+          </button>
+
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+            (click)="eliminarPaciente(paciente.id)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [header]="modoEdicion ? 'Editar paciente' : 'Nuevo paciente'" [(visible)]="visibleNuevoPaciente"
+  [modal]="true" [closable]="true" [draggable]="false" [resizable]="false" [style]="{ width: '35rem' }" appendTo="body"
+  (onHide)="cerrarDialog()">
+
+  <form [formGroup]="pacienteForm" class="paciente-form">
+    <div class="field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" pInputText formControlName="nombre" />
+      <small class="error" *ngIf="campoInvalido('nombre')">
+        El nombre es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" />
+      <small class="error" *ngIf="campoInvalido('fechaNacimiento')">
+        La fecha de nacimiento es obligatoria.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" type="text" pInputText formControlName="telefono" />
+      <small class="error" *ngIf="campoInvalido('telefono')">
+        El teléfono es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="correoElectronico">Correo electrónico</label>
+      <input id="correoElectronico" type="email" pInputText formControlName="correoElectronico" />
+      <small class="error" *ngIf="campoInvalido('correoElectronico')">
+        Ingresa un correo válido.
+      </small>
+    </div>
+
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="cerrarDialog()">
+      </button>
+
+      <button pButton type="button" [label]="modoEdicion ? 'Actualizar' : 'Guardar'" icon="pi pi-check"
+        (click)="guardarPaciente()">
+      </button>
+    </div>
+  </form>
+</p-dialog>

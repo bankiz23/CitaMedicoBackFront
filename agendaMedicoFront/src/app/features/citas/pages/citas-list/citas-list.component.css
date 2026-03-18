@@ -1,0 +1,109 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+.page-header p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+.grid-citas {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+}
+select{
+  color: black;
+}
+.card-block {
+  background: white;
+  border-radius: 20px;
+  padding: 1.3rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+}
+input, select,textarea {
+  color: black;
+}
+.cita-form,
+.buscar-form,
+.cancelar-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  color: black  ;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: white;
+}
+
+.actions,
+.dialog-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+.resultado-box,
+.detalle-cita {
+  margin-top: 1rem;
+  padding: 1rem;
+  color:black;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.detalle-cita h4 {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .grid-citas {
+    grid-template-columns: 1fr;
+  }
+
+  .cita-form,
+  .buscar-form,
+  .cancelar-form {
+    grid-template-columns: 1fr;
+  }
+}
