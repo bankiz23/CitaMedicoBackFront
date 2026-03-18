@@ -1,0 +1,22 @@
+# Node
+agendaMedicoFront/node_modules/
+agendaMedicoFront/dist/
+
+# Angular
+agendaMedicoFront/.angular/
+agendaMedicoFront/.vscode/
+
+# .NET
+agendaMedicoBack/bin/
+agendaMedicoBack/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Env
+.env
